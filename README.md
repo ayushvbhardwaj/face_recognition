@@ -19,6 +19,8 @@ This repository provides:
 ---
 
 ## Directory Structure
+
+```
 face_rec/
 │
 ├── cnn_embed.py             # CNN embedding model (trained on VGGFace2)
@@ -31,17 +33,17 @@ face_rec/
 ├── pca_embed.py             # PCA-based embedding compression experiments
 ├── visualize.py             # 3D PCA visualization of average embeddings
 │
-├── people/                  # Each person’s folder with images + embeddings.json
-│   ├── ayush/
+├── people/                  # Each person's folder with images + embeddings.json
+│   ├── person1/
 │   │   ├── img1.jpg
 │   │   ├── img2.jpg
 │   │   └── embeddings.json
-│   ├── aditya/
+│   ├── person2/
 │   │   ├── img1.jpg
 │   │   └── embeddings.json
 │
 └── train/                   # Training utilities and datasets
-
+```
 
 ---
 
@@ -50,12 +52,12 @@ face_rec/
 Three types of embeddings are supported:
 
 | Type | Dimension | Description |
-|------|------------|-------------|
-| CNN | 128 | Custom CNN trained on VGGFace2; fast and compact |
-| DCT | 128 | Frequency-domain representation (Discrete Cosine Transform) |
-| FaceNet | 512 | Pretrained InceptionResNetV1 model from facenet-pytorch |
+|------|-----------|-------------|
+| **CNN** | 128 | Custom CNN trained on VGGFace2; fast and compact |
+| **DCT** | 128 | Frequency-domain representation (Discrete Cosine Transform) |
+| **FaceNet** | 512 | Pretrained InceptionResNetV1 model from facenet-pytorch |
 
-Each person’s averaged embedding is stored as `embeddings.json` in their folder:
+Each person's averaged embedding is stored as `embeddings.json` in their folder:
 
 ```json
 {
@@ -65,62 +67,97 @@ Each person’s averaged embedding is stored as `embeddings.json` in their folde
 }
 ```
 
-Usage
+---
 
-1. Generate averaged embeddings
+## Usage
 
-Organize images for each person in the people/ folder:
+### 1. Generate averaged embeddings
 
+Organize images for each person in the `people/` folder:
+
+```
 people/
-└── ayush/
+└── person1/
     ├── img1.jpg
     ├── img2.jpg
+```
 
 Then run:
 
-python dataset_embedder.py people/ayush
+```bash
+python dataset_embedder.py people/person1
+```
 
 This creates:
 
-people/ayush/embeddings.json
+```
+people/person1/embeddings.json
+```
 
-2. Run real-time recognition
+---
+
+### 2. Run real-time recognition
 
 To recognize faces using your webcam:
 
+```bash
 python main.py
+```
 
 You can configure:
-	•	Which model to use (CNN, DCT, or FACENET)
-	•	Or run in combined ensemble mode using all three
+- Which model to use (CNN, DCT, or FACENET)
+- Or run in combined ensemble mode using all three
 
 The script detects faces via MediaPipe, extracts embeddings, and compares them with stored averages using cosine similarity.
 
-Requirements
-	•	Python 3.8+
-	•	PyTorch
-	•	OpenCV
-	•	MediaPipe
-	•	NumPy
-	•	scikit-learn
-	•	Matplotlib
-	•	tqdm
+---
+
+### 3. Visualize embeddings in 3D
+
+To visualize the high-dimensional embeddings:
+
+```bash
+python visualize.py
+```
+
+This script:
+- Loads averaged embeddings from `people/*/embeddings.json`
+- Reduces each embedding to 3D using PCA
+- Plots them in 3D space as vectors from the origin
+
+---
+
+## Requirements
+
+- Python 3.8+
+- PyTorch
+- OpenCV
+- MediaPipe
+- NumPy
+- scikit-learn
+- Matplotlib
+- tqdm
 
 Install all dependencies:
 
-Notes
-	•	The CNN model (face_embedder.pth) is trained on the VGGFace2 dataset.
-	•	FaceNet uses the pretrained InceptionResNetV1 model from facenet-pytorch.
-	•	The DCT embedding method is frequency-based and requires no training.
+```bash
+pip install -r requirements.txt
+```
 
+---
 
-	---
+## Notes
 
-✅ This version:
-- Displays properly on GitHub  
-- Preserves indentation and alignment in directory trees  
-- Keeps comments readable and inline  
-- Avoids emojis and unnecessary formatting  
-- Uses triple backticks for every code block  
+- The CNN model (`face_embedder.pth`) is trained on the VGGFace2 dataset.
+- FaceNet uses the pretrained InceptionResNetV1 model from facenet-pytorch.
+- The DCT embedding method is frequency-based and requires no training.
 
-Would you like me to include a **short results section** at the end (showing example terminal outputs and what the 3D plot looks like)? It’d make your repo presentation feel complete.
+---
+
+## Acknowledgements
+
+- **VGGFace2 Dataset** – for CNN model training
+- **FaceNet (InceptionResNetV1)** – from facenet-pytorch
+- **MediaPipe** – used for face detection
+
+---
